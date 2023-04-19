@@ -24,6 +24,7 @@
 	<body>
 		<h4 class = "text-danger"><c:out value = "${logAlert}"></c:out></h4>
 		<a href = "/dashboard" class="p-2">Dashbaord</a>
+		<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
 			Full Address
 			<!--  -->
 			Home hyperlink

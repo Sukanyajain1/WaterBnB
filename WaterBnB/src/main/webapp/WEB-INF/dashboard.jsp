@@ -25,6 +25,7 @@
 		<h4 class = "text-danger"><c:out value = "${logAlert}"></c:out></h4>
 		<h4 class = "text-danger"><c:out value = "${reviewerAlert}"></c:out></h4>
 			<a href = "/logout" class = "float-end">Logout</a>
+			<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
 			<h2>Current Listings</h2>
 			
 			<table class="table table-striped">
@@ -44,7 +45,7 @@
 							<td><c:out value="${listing.poolSize}"></c:out></td>
 							<td>$<c:out value="${listing.costPerNight}"></c:out></td>
 							<td>
-								<a href = "/edit/${listing.id}" class = "btn btn-primary"><c:out value="${listing.userReviews.size()}"></c:out>/5 - Edit</a>
+								<a href = "/edit/${listing.id}" class = "btn btn-primary"><c:out value="${listing.averageRating}"></c:out>/5 - Edit</a>
 							</td>
 						</tr>
 					</c:forEach>

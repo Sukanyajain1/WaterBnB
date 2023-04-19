@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.sj.waterbnb.models.Listing;
+import com.sj.waterbnb.models.Review;
 import com.sj.waterbnb.repositories.ListingRepo;
 
 @Service
@@ -32,10 +33,19 @@ public class ListingService {
 	public Listing findOneListing(Long id) {
 //		Optional returns an object that may or may not contain your search result- if it contains null, you are preparing the method to handle that result and return null further into the chain.
 		Optional<Listing> optionalListing = listingRepo.findById(id);
-		List<Listing> allListings= getAllListings();
+		if (optionalListing.isPresent()) {
+			return optionalListing.get();
+		}else {			
+			return null;
+		}
+	}
+	
+	
+	
+//	List<Listing> allListings= getAllListings();
 //		
 //		SPLIT THE SEARCH STRING USING .SPLIT() ----> IT WILL TURN THE STRING INTO A LIST AT EACH WHITESPACE
-
+	
 //		************
 //		someText = "welcome to the jungle"
 //		x = someText.split()
@@ -51,21 +61,15 @@ public class ListingService {
 //		for each of the attribute of listing address for each address, does the first list item match or is contained?
 //		
 //		Is searchEntry[0] contained in the listingAddress.displayedAddress of allListings[0]
-
+	
 //		Is searchEntry[1] contained in the listingAddress.displayedAddress of allListings[1]
-
-
-		
-		
-		
-		
-		
-		if (optionalListing.isPresent()) {
-			return optionalListing.get();
-		}else {			
-			return null;
-		}
-	}
+	
+	
+	
+	
+	
+	
+	
 	
 //	updates a Listing
 	public Listing updateListing(Listing l) {
@@ -77,5 +81,54 @@ public class ListingService {
 		listingRepo.deleteById(id);
 	}
 
-
+	
+	
+//	update the average rating of a listing WHEN a new review is added:
+//	get a list of all the reviews for one listing
+//	calculate the average rating and set the value as the new average rating in the post route of create review
+//	
+	public Listing updateAverageRating(Long id) {
+		Optional<Listing> optionalListing = listingRepo.findById(id);
+		System.out.println("The update got to the Listing Service.");
+		if (optionalListing.isPresent()) {
+			System.out.println("optionalListing is present.");
+			List <Review> currentReviews = optionalListing.get().getReviews();
+			System.out.println("This is the first review in the currentReviews list: " + currentReviews.get(0).getReviewContent());
+			Integer reviewSum = 0;
+			System.out.println("This is the reviewSum value before the loop: " + reviewSum);
+			System.out.println("THE REVIEW CONTENT FOR EACH LOOP: ");
+			for (Review review: currentReviews) {
+				System.out.println("Review ID: " + review.getId() + ": " + review.getReviewContent());
+				reviewSum += review.getRating();
+				System.out.println("Updated reviewSum at the end of the loop: " + reviewSum);
+			}
+			System.out.println("reviewSum AFTER THE LOOP: " + reviewSum);
+			System.out.println("SIZE OF THE REVIEWS LIST: " + currentReviews.size());
+			Double averageRating = (double) (reviewSum/currentReviews.size());
+			System.out.println("This is the average rating after the loop: " + averageRating);
+			optionalListing.get().setAverageRating(averageRating);
+			listingRepo.save(optionalListing.get());
+			System.out.println("Reset the average rating value in the listing to this: " + optionalListing.get().getAverageRating());
+			return optionalListing.get();
+		}
+		else{
+			return null;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+

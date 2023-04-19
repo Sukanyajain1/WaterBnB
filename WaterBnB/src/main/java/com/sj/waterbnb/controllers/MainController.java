@@ -13,13 +13,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.sj.waterbnb.models.Listing;
-
-import com.sj.waterbnb.services.ListingService;
-import com.sj.waterbnb.services.UserService;
 import com.sj.waterbnb.models.Listing;
 import com.sj.waterbnb.models.LoginUser;
 import com.sj.waterbnb.models.Review;
@@ -104,6 +99,7 @@ public class MainController {
 			flash.addFlashAttribute("logAlert", "Please login or register before entering the site!!");
 			return "redirect:/";
 		}
+		session.setAttribute("listing_id", null);
 		User user = userServ.findUser(userId);
 		model.addAttribute("loggedUser", user);
 		
@@ -152,11 +148,36 @@ public class MainController {
 			flash.addFlashAttribute("logAlert", "Please login or register before entering the site!!");
 			return "redirect:/";
 		}
-		
+		session.setAttribute("listing_id", listingId);
 		User user = userServ.findUser(userId);
 		Listing listing = listingServ.findOneListing(listingId);
+		
 		model.addAttribute("loggedUser", user);
 		model.addAttribute("listing", listing);
+		
+		List <Review> allReviewsInDB = reviewServ.allReviews();
+		List <Review> reviewsForOneListing = listing.getReviews();
+		List <Listing> allListingsForOneUser = user.getUserListings();
+		System.out.println("");
+		System.out.println("Listing ID: " + listing.getId());
+		System.out.println("ALL DB REVIEWS IN THE MAIN CONTROLLER:");
+		
+		for (Review review: allReviewsInDB) {
+			System.out.println("Listing ID: " + review.getListing().getId());
+			System.out.println("Review ID: " + review.getId() + ": " + review.getReviewContent());
+		}
+		System.out.println("");
+		System.out.println("ALL LISTINGS FOR ONE USER");
+		for (Listing thisListing: allListingsForOneUser) {
+			System.out.println("Listing ID: " + thisListing.getId());
+			System.out.println("Listing Address: " + thisListing.getListingAddress());
+		}
+		
+		System.out.println("");
+		System.out.println("ALL LISTING REVIEWS IN THE MAIN CONTROLLER:");
+		for (Review eachReview: reviewsForOneListing) {
+			System.out.println("Listing ID: " + eachReview.getListing().getId() + "-------" +"Review ID: " + eachReview.getId() + ": " + eachReview.getReviewContent());
+		}
 		
 		return "viewOneListing.jsp";
 	}
@@ -232,40 +253,63 @@ public class MainController {
 //  Create Review Route
 //  ============================================================
 
-	@GetMapping("/newReview/{id}")
-	public String newReview(@PathVariable("id") Long listingId, Model model, HttpSession session, RedirectAttributes flash) {
+	@GetMapping("/newReview")
+	public String newReview(Model model, HttpSession session, RedirectAttributes flash) {
+		System.out.println("");
+		System.out.println("We're in the get route for new review.");
 		Long userId = (Long) session.getAttribute("user_id");
+		System.out.println("CREATED the Long userId with session user_id.");
+		Long listingId = (Long) session.getAttribute("listing_id");
+		
+		
+		User user = userServ.findUser(userId);
+		Listing listing = listingServ.findOneListing(listingId);
+		
+		
+		
 		if(userId == null) {
 			flash.addFlashAttribute("logAlert", "Please login or register before entering the site!!");
 			return "redirect:/";
 		}
-		
-		User user = userServ.findUser(userId);
-		Listing listing = listingServ.findOneListing(listingId);
-
 		if(listing.getUser().getId() == userId) {
 			flash.addFlashAttribute("reviewerAlert", "You may only review someone else's listings!!");
 			return "redirect:/showListing/" + listingId;
 		}
 		
+		
+		
 		model.addAttribute("loggedUser", user);
 		model.addAttribute("listing", listing);
-		model.addAttribute("listingId", listingId);
 		model.addAttribute("review", new Review());
 		return "createReview.jsp";
 		
 	}
 	
-	@PostMapping("/createReview/{id}")
+	@PostMapping("/createReview")
 	public String createReview (@Valid @ModelAttribute("review") Review review, HttpSession session, BindingResult result, Model model) {
+		System.out.println("");
+		System.out.println("WE HAVE REACHED THE CREATE POST ROUTE");
 		if (result.hasErrors()) {
+			System.out.println("");
+			System.out.println("THE CREATE ROUTE RESULT HAS ERRORS.");
 			Long userId = (Long) session.getAttribute("user_id");
+			System.out.println("CREATED the userId with the session user id.");
 			model.addAttribute("userId", userId);
 			return "createReview.jsp";
 		}else {
+			System.out.println("");
+			System.out.println("we are in the else portion of the create post route.");
+			System.out.println("The listing id from the newly created review: " + review.getListing().getId());
+			System.out.println("The reviewer id from the newly created review: " + review.getUser().getId());
+			System.out.println("The user_id: " + review.getListing().getUser().getId());
 			reviewServ.saveReview(review);
-			Long currentListing = review.getListing().getId();
-			return "redirect:/showListing/" + currentListing;
+			System.out.println("Just saved the new review");
+			Listing currentListing = listingServ.findOneListing((Long) session.getAttribute("listing_id"));
+			System.out.println("This is the current review list size after saving the review to the db: " + currentListing.getReviews().size());
+//			List <Review> currentReviews = currentListing.
+//			listingServ.updateAverageRating(currentListing.getId());
+//			System.out.println("This is the new average rating coming from the Main Controller Post Route: " + review.getListing().getAverageRating());
+			return "redirect:/showListing/" + currentListing.getId();
 		}
 	}
 	

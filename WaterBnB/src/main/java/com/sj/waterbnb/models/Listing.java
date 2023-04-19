@@ -3,7 +3,6 @@ package com.sj.waterbnb.models;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,7 +43,7 @@ public class Listing {
 	@NotNull
 	private String poolSize;
 	
-//	private Double averageRating;
+	private Double averageRating;
 	
 	@NotNull
 	@Min(value = 2)
@@ -62,6 +61,14 @@ public class Listing {
 // ---------------------------------------------------------
 	@OneToMany(mappedBy="listing", fetch = FetchType.LAZY)
     private List<Review> reviews;
+    
+//	@ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//        name = "reviews",
+//        joinColumns = @JoinColumn(name = "listing_id"),
+//        inverseJoinColumns = @JoinColumn(name = "reviewer_id")
+//    )
+//    private List<Review> reviews;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
@@ -94,28 +101,29 @@ public class Listing {
 	// ---------------------------------------------------------
 	public Listing () {}
 	
+	
 	public Listing(Long id,
+			@NotNull @Size(min = 2) String listingAddress,
 			@NotNull @Size(min = 2) String listingDescription,
 			@NotNull String poolSize,
-//			Double averageRating,
-			@NotNull @Size(min = 2) Integer costPerNight,
-			String listingAddress,
-			User user,
+			Double averageRating,
+			@NotNull @Min(2) Integer costPerNight,
 			List<Review> reviews,
+			User user,
 			Date createdAt,
 			Date updatedAt) {
+		
 		this.id = id;
+		this.listingAddress = listingAddress;
 		this.listingDescription = listingDescription;
 		this.poolSize = poolSize;
-//		this.averageRating = averageRating;
+		this.averageRating = averageRating;
 		this.costPerNight = costPerNight;
-		this.listingAddress = listingAddress;
-		this.user = user;
 		this.reviews = reviews;
+		this.user = user;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
 	}
-	
 	
 	
 // ---------------------------------------------------------
@@ -126,6 +134,12 @@ public class Listing {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public String getListingAddress() {
+		return listingAddress;
+	}
+	public void setListingAddress(String listingAddress) {
+		this.listingAddress = listingAddress;
 	}
 	public String getListingDescription() {
 		return listingDescription;
@@ -139,29 +153,29 @@ public class Listing {
 	public void setPoolSize(String poolSize) {
 		this.poolSize = poolSize;
 	}
+	public Double getAverageRating() {
+		return averageRating;
+	}
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
+	}
 	public Integer getCostPerNight() {
 		return costPerNight;
 	}
 	public void setCostPerNight(Integer costPerNight) {
 		this.costPerNight = costPerNight;
 	}
-	public String getListingAddress() {
-		return listingAddress;
+	public List<Review> getReviews() {
+		return reviews;
 	}
-	public void setListingAddress(String listingAddress) {
-		this.listingAddress = listingAddress;
+	public void setReviews(List<Review> reviews) {
+		this.reviews = reviews;
 	}
 	public User getUser() {
 		return user;
 	}
 	public void setUser(User user) {
 		this.user = user;
-	}
-	public List<Review> getReviews() {
-		return reviews;
-	}
-	public void setUserReviews(List<Review> reviews) {
-		this.reviews = reviews;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
@@ -175,6 +189,13 @@ public class Listing {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	
+	
+	
+	
+
+	
 	
 	
 

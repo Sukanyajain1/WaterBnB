@@ -70,7 +70,7 @@ public class User {
  
     
 // ---------------------------------------------------------
-// ONE TO MANY
+// RELATIONSHIPS
 // ---------------------------------------------------------
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Listing> userListings;
@@ -78,7 +78,13 @@ public class User {
     
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
     private List<Review> userReviews;
-    
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//        name = "reviews",
+//        joinColumns = @JoinColumn(name = "reviewer_id"),
+//        inverseJoinColumns = @JoinColumn(name = "listing_id")
+//    )
+//    private List<Review> userReviews;
     
     
 // ---------------------------------------------------------

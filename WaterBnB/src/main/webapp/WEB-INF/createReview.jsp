@@ -29,6 +29,7 @@
 				<a href = "/dashboard" class="p-2">Dashbaord</a>
 				<a href = "/logout" class="p-2">Logout</a>
 			</div>
+			<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
 			
 			<h4>Review of <c:out value="${listing.listingAddress}"></c:out></h4>
 			
@@ -37,8 +38,9 @@
 			Rating (from 1 to 5 drop down option)
 			Submit button
 			
-			<form:form action = "/createReview/${listingId}" method = "post" modelAttribute = "review">
-
+			<form:form action = "/createReview" method = "post" modelAttribute = "review">
+				<form:hidden path = "user" value = "${loggedUser.id}" />
+				<form:hidden path = "listing" value = "${listing.id}" />
 				<div class = "form-group">
 					<form:input type = "text-area" path="reviewContent" class = "form-control"/>
 					<form:errors path="reviewContent" class = "text-danger"/>

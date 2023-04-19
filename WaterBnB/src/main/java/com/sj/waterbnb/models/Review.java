@@ -31,6 +31,7 @@ public class Review {
 	@Size(min = 2)
 	private String reviewContent;
 	
+	@NotNull
 	private Integer rating;
 	
 	
@@ -57,15 +58,20 @@ public class Review {
     private User user;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="reviewedListing_id")
+    @JoinColumn(name="listing_id")
     private Listing listing;
     
 // ---------------------------------------------------------
 // CONSTRUCTORS
 // ---------------------------------------------------------
     public Review() {}
-	public Review(Long id, @NotNull @Size(min = 2) String reviewContent, Integer rating, User user, Listing listing,
-			Date createdAt, Date updatedAt) {
+	public Review(Long id,
+			@NotNull @Size(min = 2) String reviewContent,
+			@NotNull Integer rating,
+			User user,
+			Listing listing,
+			Date createdAt,
+			Date updatedAt) {
 		this.id = id;
 		this.reviewContent = reviewContent;
 		this.rating = rating;

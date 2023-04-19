@@ -155,6 +155,12 @@ public class MainController {
 		model.addAttribute("loggedUser", user);
 		model.addAttribute("listing", listing);
 		
+		
+		listingServ.updateAverageRating(listingId);
+		System.out.println("This is the new average rating coming from the Main Controller Post Route: " + listing.getAverageRating());
+		
+
+		
 		List <Review> allReviewsInDB = reviewServ.allReviews();
 		List <Review> reviewsForOneListing = listing.getReviews();
 		List <Listing> allListingsForOneUser = user.getUserListings();
@@ -193,7 +199,7 @@ public class MainController {
 //  Edit One Listing Routes
 //  ============================================================
 
-	@GetMapping("/edit/{id}")
+	@GetMapping("/editListing/{id}")
 	public String editListing (@PathVariable("id") Long listingId, Model model, HttpSession session, RedirectAttributes flash) {
 		Long userId = (Long) session.getAttribute("user_id");
 		if(userId == null) {
@@ -208,17 +214,26 @@ public class MainController {
 			model.addAttribute("listing", listing);
 			return "editListing.jsp";
 		}
-		flash.addFlashAttribute("driverAlert", "You must be the driver to edit this listing's information!");
+		flash.addFlashAttribute("hostAlert", "You must be the host to edit this listing's information!");
 		return "redirect:/dashboard";
 		
 	}
 	
-	@PutMapping("/update/{id}")
+	@PutMapping("/updateListing/{id}")
 	public String updateListing (@Valid @ModelAttribute("listing") Listing listing, BindingResult result) {
+		System.out.println("");
+		System.out.println("We're in the PUT ROUTE for update listing.");
 		if(result.hasErrors()) {
+			System.out.println("");
+			System.out.println("THE RESULT HAS ERRORS- TRIGGERED IF STATEMENT.");
+			System.out.println("ERROR: " + result.getFieldError());
 			return "editListing.jsp"; 
 		} else {
+			System.out.println("");
+			System.out.println("ELSE STATEMENT.");
 			listingServ.saveListing(listing);
+			System.out.println("");
+			System.out.println("Just saved the listing update. redirecting to dashboard.");
 			return "redirect:/dashboard";
 		}
 	}
@@ -307,8 +322,7 @@ public class MainController {
 			Listing currentListing = listingServ.findOneListing((Long) session.getAttribute("listing_id"));
 			System.out.println("This is the current review list size after saving the review to the db: " + currentListing.getReviews().size());
 //			List <Review> currentReviews = currentListing.
-//			listingServ.updateAverageRating(currentListing.getId());
-//			System.out.println("This is the new average rating coming from the Main Controller Post Route: " + review.getListing().getAverageRating());
+//			
 			return "redirect:/showListing/" + currentListing.getId();
 		}
 	}

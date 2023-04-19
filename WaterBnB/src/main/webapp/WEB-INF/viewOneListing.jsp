@@ -30,41 +30,38 @@
 				<a href = "/logout" class="p-2">Logout</a>
 			</div>
 			<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
-			<div class = "row">
-				<div class = "col">
+			<div class = "row justify-content-around">
+				<div class = "col-5 p-3">
 					<h4><c:out value="${listing.listingAddress}"></c:out></h4><br/>
 					<h4><c:out value="${listing.listingDescription}"></c:out></h4>
 				</div>
-				<div class = "col">
+				<div class = "col-5 p-3">
 					<h4><span  style="text-decoration: underline;">Email:</span> <c:out value="${listing.user.email}"></c:out></h4>
 					<h4><span  style="text-decoration: underline;">Name:</span>  <c:out value="${listing.user.firstName}"></c:out> <c:out value="${listing.user.lastName}"></c:out></h4>
 					<h4><span  style="text-decoration: underline;">Pool Size:</span> <c:out value="${listing.poolSize}"></c:out></h4>
 					<h4><span  style="text-decoration: underline;">Cost Per Night:</span> $<c:out value="${listing.costPerNight}"></c:out></h4>
 				</div>
 			</div>
-			
-		</div>
-		<!-- 
-<c:out value="${listing.id}"></c:out> -->
-		<br/>
-		<div class = "container border">
+			<br/>
 			<div class = "d-flex justify-content-between">
-				<h4>Reviews (<c:out value="${listing.averageRating}"></c:out>/5)</h4>
+				<h4>Reviews (<c:out value="${listing.averageRating}">0</c:out>/5)</h4>
 				
-				<a href = "/newReview" class="p-2">Leave a Review</a>
+				<a href = "/newReview">Leave a Review</a>
 			</div>	
-			
-			<!-- forEach loop for all ratings with foreign id matching the listing.id -->
-			<c:forEach var="review" items="${listing.reviews}">
-
-				<c:out value="${review.user.firstName}"></c:out> <c:out value="${review.user.lastName}"></c:out><br/>
-				Rating: <c:out value="${review.rating}"></c:out>/5<br/>
-				<p><c:out value="${review.reviewContent}"></c:out></p>
-			</c:forEach>
-					
-					
-					
-					<!-- <a href = "/show/${listing.id}"> <c:out value="${listing.listingAddress}"></c:out></a> -->
+			<div class = "container border">
+				
+				<!-- forEach loop for all ratings with foreign id matching the listing.id -->
+				<c:forEach var="review" items="${listing.reviews}">
+					<div class = "border-bottom mb-3">
+	
+						<strong><c:out value="${review.user.firstName}"></c:out> <c:out value="${review.user.lastName}"></c:out></strong><br/>
+						<a href = "/editReview/${review.id}" class = "float-end">Edit Review</a>
+	
+						Rating: <c:out value="${review.rating}"></c:out>/5<br/>
+						<c:out value="${review.reviewContent}"></c:out>
+					</div>
+				</c:forEach>
+			</div>
 		</div>
 	</body>
 </html>

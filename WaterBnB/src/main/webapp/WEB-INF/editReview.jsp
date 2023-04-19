@@ -32,7 +32,8 @@
 			<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
 			
 			<h4>Review of <c:out value="${listing.listingAddress}"></c:out></h4>
-			<form:form action = "/createReview" method = "post" modelAttribute = "review">
+			<form:form action = "/updateReview/${review.id}" method = "post" modelAttribute = "review">
+				<input type = "hidden" name = "_method" value = "put">
 				<form:hidden path = "user" value = "${loggedUser.id}" />
 				<form:hidden path = "listing" value = "${listing.id}" />
 				<div class = "form-group">
@@ -49,7 +50,7 @@
 						<form:option value="5">5</form:option>
 					</form:select>
 				</div>
-				<input type = "submit" value = "Add Review" class = "btn btn-success mt-2" />
+				<input type = "submit" value = "Update Review" class = "btn btn-success mt-2" />
 			</form:form>
 		</div>
 	</body>

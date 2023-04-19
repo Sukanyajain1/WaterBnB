@@ -93,23 +93,31 @@ public class ListingService {
 		if (optionalListing.isPresent()) {
 			System.out.println("optionalListing is present.");
 			List <Review> currentReviews = optionalListing.get().getReviews();
-			System.out.println("This is the first review in the currentReviews list: " + currentReviews.get(0).getReviewContent());
-			Integer reviewSum = 0;
-			System.out.println("This is the reviewSum value before the loop: " + reviewSum);
-			System.out.println("THE REVIEW CONTENT FOR EACH LOOP: ");
-			for (Review review: currentReviews) {
-				System.out.println("Review ID: " + review.getId() + ": " + review.getReviewContent());
-				reviewSum += review.getRating();
-				System.out.println("Updated reviewSum at the end of the loop: " + reviewSum);
+			if (!currentReviews.isEmpty()) {
+				System.out.println("This is the first review in the currentReviews list: " + currentReviews.get(0).getReviewContent());
+				double reviewSum = 0;
+				System.out.println("This is the reviewSum value before the loop: " + reviewSum);
+				System.out.println("THE REVIEW CONTENT FOR EACH LOOP: ");
+			
+			
+				for (Review review: currentReviews) {
+					System.out.println("Review ID: " + review.getId() + ": " + review.getReviewContent());
+					reviewSum += review.getRating();
+					System.out.println("Updated reviewSum at the end of the loop: " + reviewSum);
+				}
+				System.out.println("reviewSum AFTER THE LOOP: " + reviewSum);
+				System.out.println("SIZE OF THE REVIEWS LIST: " + currentReviews.size());
+				Double averageRating = (double)  (Math.round((reviewSum/currentReviews.size())*10.0)/10.0);
+				System.out.println("This is the average rating after the loop: " + averageRating);
+				optionalListing.get().setAverageRating(averageRating);
+				listingRepo.save(optionalListing.get());
+				System.out.println("Reset the average rating value in the listing to this: " + optionalListing.get().getAverageRating());
+				return optionalListing.get();
+			
 			}
-			System.out.println("reviewSum AFTER THE LOOP: " + reviewSum);
-			System.out.println("SIZE OF THE REVIEWS LIST: " + currentReviews.size());
-			Double averageRating = (double) (reviewSum/currentReviews.size());
-			System.out.println("This is the average rating after the loop: " + averageRating);
-			optionalListing.get().setAverageRating(averageRating);
-			listingRepo.save(optionalListing.get());
-			System.out.println("Reset the average rating value in the listing to this: " + optionalListing.get().getAverageRating());
-			return optionalListing.get();
+			else{
+				return null;
+			}
 		}
 		else{
 			return null;

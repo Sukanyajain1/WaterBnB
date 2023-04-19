@@ -24,10 +24,10 @@
 <body>
 	<div class = "container">
 		<h4 class = "text-danger"><c:out value = "${logAlert}"></c:out></h4>
-		<h1>Welcome!</h1>
+		<h1>Welcome to WaterBnB!</h1>
 		<p>Find A Pool For Your Next Vacation!</p>
-			<div class = "row">
-				<div class = "col">
+			<div class = "row justify-content-around">
+				<div class = "col-5 border p-3">
 					<h2>Register</h2>
 					<form:form action = "/register" method = "post" modelAttribute = "newUser">
 						<div class = "row">
@@ -76,7 +76,7 @@
 				</div>
 				
 				
-				<div class = "col">
+				<div class = "col-5 border p-3">
 					<h2>Login</h2>
 					<form:form action = "/login" method = "post" modelAttribute = "newLogin">
 						<div class = "row">

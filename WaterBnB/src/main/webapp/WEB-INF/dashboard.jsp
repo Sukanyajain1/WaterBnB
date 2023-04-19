@@ -23,7 +23,7 @@
 	<body>
 		<div class="container"> <!-- Beginning of Container -->
 		<h4 class = "text-danger"><c:out value = "${logAlert}"></c:out></h4>
-		<h4 class = "text-danger"><c:out value = "${reviewerAlert}"></c:out></h4>
+		<h4 class = "text-danger"><c:out value = "${hostAlert}"></c:out></h4>
 			<a href = "/logout" class = "float-end">Logout</a>
 			<h1>Hey, <c:out value = "${loggedUser.firstName}"></c:out>!</h1>
 			<h2>Current Listings</h2>
@@ -45,14 +45,14 @@
 							<td><c:out value="${listing.poolSize}"></c:out></td>
 							<td>$<c:out value="${listing.costPerNight}"></c:out></td>
 							<td>
-								<a href = "/edit/${listing.id}" class = "btn btn-primary"><c:out value="${listing.averageRating}"></c:out>/5 - Edit</a>
+								<a href = "/editListing/${listing.id}" class = "btn btn-primary"><c:out value="${listing.averageRating}">0</c:out>/5 - Edit</a>
 							</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 
-			<div>
+			<div class = "border mt-5 p-3" style = "width: 50%">
 				<h2>New Listing</h2>
 				
 				<form:form action = "/create" method = "post" modelAttribute = "listing">
@@ -69,12 +69,13 @@
 					</div>
 					<div class = "form-group">
 						<label>Cost Per Night: $</label>
-						<form:input path = "costPerNight" class = "form-control"/>
+						<form:input type = "number" min="1" path = "costPerNight" class = "form-control"/>
 						<form:errors class = "text-danger"/>
 					</div>					
 					<div class = "form-group">
 						<label>Pool Size: </label>
 						<form:select path = "poolSize" class = "form-control">
+							<option value="" disabled selected>Select a pool size!</option>
 							<form:option value="Small">Small</form:option>
 							<form:option value="Medium">Medium</form:option>
 							<form:option value="Large">Large</form:option>
